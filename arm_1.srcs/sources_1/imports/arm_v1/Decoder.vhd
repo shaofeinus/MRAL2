@@ -44,18 +44,73 @@ entity Decoder is port(
 			ALUSrc		: out	std_logic;
 			ImmSrc		: out	std_logic_vector(1 downto 0);
 			RegSrc		: out	std_logic_vector(1 downto 0);
-			NoWrite		: out	std_logic;
+			NoWrite		: out	std_logic;                            -- for CMP instruction
 			ALUControl	: out	std_logic_vector(1 downto 0);
 			FlagW		: out	std_logic_vector(1 downto 0)
 			);
 end Decoder;
 
 architecture Decoder_arch of Decoder is
+
 	signal ALUOp 			: std_logic;
 	signal Branch 			: std_logic;
-	--<extra signals, if any>
+	signal RegWTemp         : std_logic;
+	
+	component Decoder_PCLogic is
+        Port ( Rd : in STD_LOGIC_VECTOR (3 downto 0);       -- from instruction memory
+               Branch : in STD_LOGIC;                       -- from Decoder_MainDecoder 
+               RegW : in STD_LOGIC;                         -- from Decoder_MainDecoder
+               PCS : out STD_LOGIC);                        -- to CondLogic
+    end component;
+    
+    component Decoder_MainDecoder is
+        Port ( Op : in STD_LOGIC_VECTOR (1 downto 0);       -- from instruction memory 
+               Funct : in STD_LOGIC_VECTOR (5 downto 0);    -- from instruction memory
+               Branch : out STD_LOGIC;                      -- to Decoder_PCLogic
+               RegW : out STD_LOGIC;                        -- to CondLogic and Decoder_PCLogic
+               MemW : out STD_LOGIC;                        -- to CondLogic
+               MemtoReg : out STD_LOGIC;                    -- to mux in ARM (output of data memory)
+               ALUSrc : out STD_LOGIC;                      -- to mux in ARM (input of ALU)
+               ImmSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to Extend
+               RegSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to mux in ARM (input of RegFile)
+               ALUOp : out STD_LOGIC);                      -- to Decoder_ALUDecoder
+    end component;
+    
+    component Decoder_ALUDecoder is
+        Port ( Funct : in STD_LOGIC_VECTOR (4 downto 0);        -- from instruction memory
+               ALUOp : in STD_LOGIC;                            -- from Decoder_MainDecoder
+               ALUControl : out STD_LOGIC_VECTOR (1 downto 0);  -- to ALU
+               FlagW : out STD_LOGIC_VECTOR (1 downto 0);       -- to CondLogic
+               NoWrite : out STD_LOGIC );
+    end component;
+    
 begin
-
---<decoding logic here>
+    
+    RegW <= RegWTemp;
+    
+    PCLogic : Decoder_PCLogic port map (
+        Rd          => Rd,                    
+        Branch      => Branch,                     
+        RegW        => RegWTemp,                        
+        PCS         => PCS );
+    
+    MainDecoder : Decoder_MainDecoder port map (
+        Op          => Op,
+        Funct       => Funct,
+        Branch      => Branch,
+        RegW        => RegWTemp,
+        MemW        => MemW,
+        MemtoReg    => MemtoReg,
+        ALUSrc      => ALUSrc,
+        ImmSrc      => ImmSrc,
+        RegSrc      => RegSrc,
+        ALUOp       => ALUOp );
+        
+    ALUDecoder : Decoder_ALUDecoder port map (
+        Funct       => Funct(4 downto 0),
+        ALUOp       => ALUOp,
+        ALUControl  => ALUControl,
+        FlagW       => FlagW, 
+        NoWrite     => NoWrite );
 
 end Decoder_arch;
