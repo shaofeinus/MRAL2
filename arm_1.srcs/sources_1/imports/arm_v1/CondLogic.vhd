@@ -51,10 +51,37 @@ end CondLogic;
 architecture CondLogic_arch of CondLogic is
 	signal CondEx		: std_logic;
 	signal N, Z, C, V	: std_logic := '0';
-	--<extra signals, if any>
+	signal FlagWrite    : std_logic_vector ( 1 downto 0 );
 begin
 	
-	--<additional logic here>
+	-- The AND gates that computes FlagWrite from CondEx and FlagW
+	FlagWrite <= ( 1 => FlagW(1) and CondEx, 0 => FlagW(0) and CondEx );
+	
+	-- The 2 registers that save the flag values
+	process(CLK)
+	begin
+        if CLK'event and CLK = '1' then
+           if FlagWrite(1) = '1' then
+               N <= ALUFlags(3);
+               Z <= ALUFlags(2);
+           end if;
+           if FlagWrite(0) = '1' then
+               C <= ALUFlags(1);
+               V <= ALUFlags(0);
+           end if;
+        end if;
+	end process;
+	
+	-- The AND gate that computes PCSrc from CondEx and PCS
+	PCSrc <= PCS and CondEx;
+	
+	-- The AND gate that computes RegWrite from CondEx, RegW and NoWrite
+	RegWrite <= RegW and CondEx and (not NoWrite);
+	
+	-- The AND gate that computes MemWrite from CondEx and MemW
+	MemWrite <= MemW and CondEx;
+	
+	-- This os the Condition Check module
 	with Cond select CondEx <= 	Z						when "0000",	-- EQ
 								not Z					when "0001",	-- NE
 								C						when "0010",	-- CS / HS

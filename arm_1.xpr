@@ -37,6 +37,14 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/arm_v1/CondLogic.vhd">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/CondLogic.vhd"/>
+          <Attr Name="ImportTime" Val="1473061469"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/arm_v1/Extend.vhd">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/Extend.vhd"/>
@@ -57,14 +65,6 @@
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/Shifter.vhd"/>
           <Attr Name="ImportTime" Val="1473061509"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/arm_v1/CondLogic.vhd">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/CondLogic.vhd"/>
-          <Attr Name="ImportTime" Val="1473061469"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
