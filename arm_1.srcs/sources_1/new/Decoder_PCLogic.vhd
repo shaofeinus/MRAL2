@@ -42,5 +42,6 @@ architecture Behavioral of Decoder_PCLogic is
 
 begin
 
+    PCS <= (Rd = "1111" and RegW = '1') or Branch = '1';
 
 end Behavioral;

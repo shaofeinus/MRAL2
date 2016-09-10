@@ -33,7 +33,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Decoder_MainDecoder is
     Port ( Op : in STD_LOGIC_VECTOR (1 downto 0);       -- from instruction memory 
-           Funct : in STD_LOGIC_VECTOR (5 downto 0);    -- from instruction memory
+           Funct5 : in STD_LOGIC;                       -- from instruction memory
+           Funct0 : in STD_LOGIC;                       -- from instruction memory
            Branch : out STD_LOGIC;                      -- to Decoder_PCLogic
            RegW : out STD_LOGIC;                        -- to CondLogic and Decoder_PCLogic
            MemW : out STD_LOGIC;                        -- to CondLogic
@@ -47,6 +48,43 @@ end Decoder_MainDecoder;
 architecture Behavioral of Decoder_MainDecoder is
 
 begin
-
+	
+	-- Refer to Lecture 3 p48
+	
+    Branch      <=      '1' when Op = "10" else
+						'0' when Op = "00" or Op = "01" else
+                        'X';
+						
+    MemtoReg    <=    	'1' when Op = "01" and Funct0 = '1' else
+						'0' when Op = "00" or (Op = "01" and Funct0 = '1') or Op = "10" else
+                        'X';
+	
+	MemW		<=		'1' when Op = "01" and Funct0 = '0' else
+						'0' when Op = "00" or (Op = "01" and Funct0 = '1') or Op = "10" else
+						'X';
+								
+	ALUSrc      <=      '0' when Op = "00" and Funct5 = '0' else 
+						'1' when (Op = "00" and Funct5 = '1') or Op = "01" or Op = "10" else 
+						'X';
+	
+	ImmSrc		<=		"00" when Op = "00" and Funct5 = '1' else
+						"01" when Op = "01" else
+						"10" when Op = "10" else
+						"XX" when Op = "00" and Funct5 = '0' else
+						"XX";
+	
+	RegW		<=		'1' when Op = "00" or (Op = "01" and Funct0 = '1') else
+						'0' when (Op = "01" and Funct0 = '0') or Op = "10" else
+						'X';
+	
+	RegSrc		<=		"00" when Op = "00" and Funct5 = '0' else
+						"10" when Op = "01" and Funct0 = '0' else
+						"X0" when (Op = "00" and Funct5 = '1') or (Op = "01" and Funct0 = '1') else
+						"X1" when Op = "10" else
+						"XX";
+	
+	ALUOp		<=		'1' when Op = "00" else
+						'0' when Op = "01" or Op = "10" else
+						'X';
 
 end Behavioral;

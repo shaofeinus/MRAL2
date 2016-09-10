@@ -43,5 +43,79 @@ architecture Behavioral of Decoder_ALUDecoder is
 
 begin
 
+	-- Refer to Lecture 3 p43
+	
+	ALUControl		<=		"00" when ALUOp = '0' or (ALUOp = '1' and Funct( 4 downto 1 ) = "0100") else
+	
+							"01" when 
+							
+								( ALUOp = '1' and Funct( 4 downto 1 ) = "0010" ) 
+								
+								or
+								
+								( ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' )	
+								
+								else
+							
+							"10" when ALUOp = '1' and Funct( 4 downto 1 ) = "0000" else
+							
+							"11" when ALUOp = '1' and Funct( 4 downto 1 ) = "1100" else
+							
+							"XX";
+	
+	FlagW			<=		"00" when
+	
+								( ALUOp = '0' ) 
+								
+								or
+								
+								( ALUOp = '1' and 
+								( Funct( 4 downto 1 ) = "0100" or
+								  Funct( 4 downto 1 ) = "0010" or
+								  Funct( 4 downto 1 ) = "0000" or
+								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '0')
+								  
+								else
+								
+							"11" when
+							
+								( ALUOp = '1' and 
+								( Funct( 4 downto 1 ) = "0100" or
+								  Funct( 4 downto 1 ) = "0010" ) and Funct(0) = '1' )
+								  
+								or 
+								
+								( ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' ) 
+								
+								  
+								else
+							
+							"10" when
+							
+								( ALUOp = '1' and 
+								( Funct( 4 downto 1 ) = "0000" or
+								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '1' )
+								  
+								else
+								
+							"XX";
+	
+	NoWrite			<= 		'0' when 
+	
+								( ALUOp = '0' ) 
+								
+								or
+								
+								( ALUOp = '1' and 
+								( Funct( 4 downto 1 ) = "0100" or
+								  Funct( 4 downto 1 ) = "0010" or
+								  Funct( 4 downto 1 ) = "0000" or
+								  Funct( 4 downto 1 ) = "1100" ))
+								  
+								else
+								
+							'1' when ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' else
+							
+							'X';
 
 end Behavioral;

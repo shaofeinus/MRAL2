@@ -65,7 +65,8 @@ architecture Decoder_arch of Decoder is
     
     component Decoder_MainDecoder is
         Port ( Op : in STD_LOGIC_VECTOR (1 downto 0);       -- from instruction memory 
-               Funct : in STD_LOGIC_VECTOR (5 downto 0);    -- from instruction memory
+               Funct5 : in STD_LOGIC;                       -- from instruction memory
+               Funct0 : in STD_LOGIC;                       -- from instruction memory
                Branch : out STD_LOGIC;                      -- to Decoder_PCLogic
                RegW : out STD_LOGIC;                        -- to CondLogic and Decoder_PCLogic
                MemW : out STD_LOGIC;                        -- to CondLogic
@@ -96,7 +97,8 @@ begin
     
     MainDecoder : Decoder_MainDecoder port map (
         Op          => Op,
-        Funct       => Funct,
+        Funct5      => Funct(5),
+        Funct0      => Funct(0),
         Branch      => Branch,
         RegW        => RegWTemp,
         MemW        => MemW,
