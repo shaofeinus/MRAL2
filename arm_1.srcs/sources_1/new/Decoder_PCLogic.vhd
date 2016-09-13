@@ -21,6 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -42,6 +43,7 @@ architecture Behavioral of Decoder_PCLogic is
 
 begin
 
-    PCS <= (Rd = "1111" and RegW = '1') or Branch = '1';
+    PCS <= '1' when (Rd = "1111" and RegW = '1') or Branch = '1' else
+           '0';
 
 end Behavioral;

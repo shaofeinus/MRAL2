@@ -36,6 +36,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity ARM is port(
 			CLK			: in 	std_logic;
@@ -202,7 +203,58 @@ signal Result		: 	std_logic_vector(31 downto 0);
 
 begin
 
---<Datapath connections here>		
+-- Wire connection for internal signals
+WE3			<=		RegWrite;
+R15			<=		PCPlus8;
+Src_A		<=		RD1;
+WD3			<=		Result;
+shIn		<=		RD2;
+shamt5		<=		Instr( 11 downto 7 );
+sh			<=		Instr( 6 downto 5 );
+
+-- Wire connections for signals with ARM entity input
+cond		<=		Instr( 31 downto 28 );
+Op			<=		Instr( 27 downto 26 );
+Funct		<=		Instr( 25 downto 20 );
+Rd			<=		Instr( 15 downto 12 );
+A3			<=		Instr( 15 downto 12 );
+InstrImm	<=		Instr( 23 downto 0 );
+
+-- Wire connections for signals with ARM entity output
+PC			<=		PC_sig;
+WriteData	<=		RD2;
+ALUResult	<=		ALUResult_sig;
+
+
+-- PCSrc MUX
+PC_IN		<=		PCPlus4	when PCSrc = '0' else
+					Result when PCSrc = '1' else
+					(others => 'X');
+
+-- RegSrc0/RA1 MUX
+A1			<=		Instr (19 downto 16) when RegSrc(0) = '0' else
+					x"F" when RegSrc(0) = '1' else
+					(others => 'X');
+
+-- RegSrc1/RA2 MUX
+A2			<=		Instr (3 downto 0) when RegSrc(1) = '0' else
+					Instr (15 downto 12) when RegSrc(1) = '1' else
+					(others => 'X');
+					
+-- ALUSrc MUX
+Src_B		<=		shOut when ALUSrc = '0' else
+					ExtImm when ALUSrc = '1' else
+					(others => 'X');
+-- MemtoReg MUX
+Result		<=		ALUResult_sig when MemtoReg = '0' else
+					ReadData when MemtoReg = '1' else
+					(others => 'X');
+
+-- PCPlus8 Adder
+PCPlus8		<=		PCPlus4 + 4;
+
+-- PCPlus4 Adder		
+PCPlus4		<=		PC_sig + 4;
 
 WE_PC		<= '1'; -- Will need to control it for multi-cycle operations (Multiplication, Division) and/or Pipelining with hazard hardware.
 
