@@ -52,7 +52,8 @@ signal FlagW : STD_LOGIC_VECTOR (1 downto 0);       	-- to CondLogic
 signal NoWrite : STD_LOGIC;								-- to CondLogic
 
 -- for test bench only, flipped when scenario is tested to trigger assert statements
-signal NotDP_tested : STD_LOGIC := '0';			
+signal NotDP_tested : STD_LOGIC := '0';	
+signal MEM_SUB_IMM_tested : STD_LOGIC := '0';		
 signal ADD_tested : STD_LOGIC := '0';
 signal ADDS_tested : STD_LOGIC := '0';
 signal SUB_tested : STD_LOGIC := '0';  
@@ -70,18 +71,24 @@ begin
 	process 
     begin
 		
-        ALUOp <= '0'; 			  				wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct <= "01000";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (ADD Funct)
-		ALUOp <= '0'; Funct <= "01001";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (ADD Funct)
-		ALUOp <= '0'; Funct <= "00100";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (SUB Funct)
-		ALUOp <= '0'; Funct <= "00101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (SUB Funct)
-		ALUOp <= '0'; Funct <= "00000";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (AND Funct)
-		ALUOp <= '0'; Funct <= "00001";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (AND Funct)
-		ALUOp <= '0'; Funct <= "11000";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (ORR Funct)
-		ALUOp <= '0'; Funct <= "11001";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (ORR Funct)
-		ALUOp <= '0'; Funct <= "10100";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (CMP Funct)
-		ALUOp <= '0'; Funct <= "10101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP (CMP Funct)
+        ALUOp <= '0'; Funct( 4 downto 1 ) <= "0100"; 			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1100";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0110";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0111";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1110";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1111";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
 		
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0000"; 			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1000";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0001";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0010";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0011";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1001";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1010";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1011";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+
 		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0100"; Funct(0) <= '0';	wait for 50ns; ADD_tested <= not ADD_tested;	-- ADD no flag
 		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0100"; Funct(0) <= '1';	wait for 50ns; ADDS_tested <= not ADDS_tested;	-- ADD no flag
 		
@@ -102,6 +109,12 @@ begin
 	begin 
 		assert ( ALUControl = "00" and FlagW = "00" and NoWrite = '0' ) 
 				 report "Not Not DP" severity warning;
+	end process;
+	
+	process ( MEM_SUB_IMM_tested )
+	begin 
+		assert ( ALUControl = "01" and FlagW = "00" and NoWrite = '0' ) 
+				 report "Not LDR/STR negative Imm" severity warning;
 	end process;
 	
 	process ( ADD_tested )

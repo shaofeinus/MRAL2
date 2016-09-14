@@ -110,9 +110,18 @@
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/imports/arm_v1/TOP.vhd">
-        <FileInfo>
+        <FileInfo RelPath="TOP.vhd">
           <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/TOP.vhd"/>
           <Attr Name="ImportTime" Val="1473248804"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/Desktop/TOP_testbench.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../../../../TOP_testbench.vhd"/>
+          <Attr Name="ImportTime" Val="1473819638"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -139,17 +148,17 @@
     </FileSet>
     <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1">
       <Filter Type="Srcs"/>
-      <File Path="$PSRCDIR/sim_1/imports/arm_v1/test_top.vhd">
+      <File Path="$PSRCDIR/sim_1/new/test_Decoder_ALUDecoder.vhd">
         <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/test_top.vhd"/>
-          <Attr Name="ImportTime" Val="1473071210"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sim_1/new/test_Decoder_ALUDecoder.vhd">
+      <File Path="$PSRCDIR/sim_1/imports/arm_v1/test_top.vhd">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../../lab 2/arm_v1/test_top.vhd"/>
+          <Attr Name="ImportTime" Val="1473071210"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -163,7 +172,7 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="test_top"/>
+        <Option Name="TopModule" Val="test_Decoder_ALUDecoder"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
         <Option Name="SrcSet" Val="sources_1"/>
         <Option Name="xsim.simulate.runtime" Val="300ns"/>

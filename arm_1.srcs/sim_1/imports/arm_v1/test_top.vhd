@@ -23,7 +23,7 @@ ARCHITECTURE behavior OF test_top IS
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    COMPONENT TOP
+    COMPONENT TOP_testbench
     PORT(
          DIP : IN  std_logic_vector(15 downto 0);
          PB : IN  std_logic_vector(3 downto 0);
@@ -58,7 +58,7 @@ ARCHITECTURE behavior OF test_top IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: TOP PORT MAP (
+   uut: TOP_testbench PORT MAP (
           DIP => DIP,
           PB => PB,
           LED => LED,
