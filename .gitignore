@@ -4,3 +4,4 @@ arm_1.sim/
 arm_1.hw/
 *.jou
 *.str
+*.xpr
