@@ -45,7 +45,12 @@ begin
 
 	-- Refer to Lecture 3 p43
 	
-	ALUControl		<=		"00" when ALUOp = '0' or (ALUOp = '1' and Funct( 4 downto 1 ) = "0100") else
+	ALUControl		<=		"00" when 
+								( ALUOp = '0' and Funct(3) = '1' ) 		-- To accomodate LDR/STR with negative Imm offest
+								
+								or 
+								
+								(ALUOp = '1' and Funct( 4 downto 1 ) = "0100") else
 	
 							"01" when 
 							
@@ -54,6 +59,10 @@ begin
 								or
 								
 								( ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' )	
+								
+								or
+								
+								( ALUOp = '0' and Funct(3) = '0' )		-- For LDR/STR with negative Imm offest
 								
 								else
 							
@@ -73,7 +82,7 @@ begin
 								( Funct( 4 downto 1 ) = "0100" or
 								  Funct( 4 downto 1 ) = "0010" or
 								  Funct( 4 downto 1 ) = "0000" or
-								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '0')
+								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '0')	
 								  
 								else
 								
