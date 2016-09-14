@@ -49,15 +49,15 @@ begin
 								( ALUOp = '0' and Funct(3) = '1' ) 		-- To accomodate LDR/STR with negative Imm offest
 								
 								or 
-								
+								--add--
 								(ALUOp = '1' and Funct( 4 downto 1 ) = "0100") else
 	
 							"01" when 
-							
+							    --sub--
 								( ALUOp = '1' and Funct( 4 downto 1 ) = "0010" ) 
 								
 								or
-								
+								--cmp--
 								( ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' )	
 								
 								or
@@ -65,9 +65,9 @@ begin
 								( ALUOp = '0' and Funct(3) = '0' )		-- For LDR/STR with negative Imm offest
 								
 								else
-							
+							--and--
 							"10" when ALUOp = '1' and Funct( 4 downto 1 ) = "0000" else
-							
+							--orr--
 							"11" when ALUOp = '1' and Funct( 4 downto 1 ) = "1100" else
 							
 							"XX";

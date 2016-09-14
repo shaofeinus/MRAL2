@@ -2,3 +2,5 @@ arm_1.runs/
 arm_1.cache/
 arm_1.sim/
 arm_1.hw/
+*.jou
+*.str
