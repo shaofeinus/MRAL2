@@ -51,6 +51,9 @@ ARCHITECTURE behavior OF test_top IS
 
    -- Clock period definitions
    constant CLK_undiv_period : time := 10 ns;
+   
+   -- Signals for better visibility
+   signal PC_value : std_logic_vector(6 downto 0);
  
 BEGIN
  
@@ -84,9 +87,10 @@ BEGIN
 		RESET <= '1';   --RESET is ACTIVE LOW
 		DIP <= x"FFFF";
 
-      -- insert stimulus here 
-
       wait;
    end process;
+   
+   -- Dispaly PC value as a signal
+   PC_value <= LED(6 downto 0);
 
 END;

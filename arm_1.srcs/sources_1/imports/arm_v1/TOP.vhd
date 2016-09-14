@@ -65,8 +65,8 @@ architecture arch_TOP of TOP is
 ----------------------------------------------------------------
 -- Constants
 ----------------------------------------------------------------
-constant CLK_DIV_BITS	: integer := 26; --26 for a clock of the order of 1Hz. Changed in top.vhd_v2 : use (CLK_DIV_BITS of top.vhd_v2)+1. 
-							   -- := 1; For simulation. One 1 cycle for each 2 cycle of clk
+constant CLK_DIV_BITS	: integer   := 26; --26 for a clock of the order of 1Hz. Changed in top.vhd_v2 : use (CLK_DIV_BITS of top.vhd_v2)+1. 
+									-- := 1;  -- For simulation. One 1 cycle for each 2 cycle of clk
 -- 1 for a 50MHz clock.
 -- See the notes in CLK_DIV_PROCESS for SIMULATION or for obtaining a 100MHz clock frequency, 
 
@@ -109,14 +109,45 @@ signal RESET_EXT	: std_logic; -- effective reset
 type MEM_128x32 is array (0 to 127) of std_logic_vector (31 downto 0); -- 128 words
 
 ----------------------------------------------------------------
--- Instruction Memory	    -- paste VHDL code converted from hex here
+-- Instruction Memory
 ----------------------------------------------------------------
-constant INSTR_MEM : MEM_128x32 := (		others => x"00000000");
+constant INSTR_MEM : MEM_128x32 := (		x"E59FC1FC", 
+											x"E59FB1F4", 
+											x"E59FA1FC", 
+											x"E59F01FC", 
+											x"E59F11FC", 
+											x"E2511001", 
+											x"1AFFFFFD", 
+											x"E59C1000", 
+											x"E58B1000", 
+											x"E58A1000", 
+											x"E59A1000", 
+											x"E58B1000", 
+											x"E58A1000", 
+											x"EAFFFFF8", 
+											x"E59F51D8", 
+											x"E58F17BC", 
+											x"EAFFFFFE", 
+											others => x"00000000");
+
 
 ----------------------------------------------------------------
--- Data (Constant) Memory	-- paste VHDL code converted from hex here 
+-- Data (Constant) Memory
 ----------------------------------------------------------------
-constant DATA_CONST_MEM : MEM_128x32 := (	others => x"00000000");
+constant DATA_CONST_MEM : MEM_128x32 := (	x"00000C00", 
+											x"00000C04", 
+											x"00000C08", 
+											x"00000C0C", 
+											x"00000000", 
+											x"00000004", 
+											x"00000800", 
+											x"ABCD1234", 
+											x"00000224", 
+											x"6C6C6548", 
+											x"6F57206F", 
+											x"21646C72", 
+											x"00212121", 
+											others => x"00000000");
 
 ----------------------------------------------------------------
 -- Data (Variable) Memory   -- paste VHDL code converted from hex here
