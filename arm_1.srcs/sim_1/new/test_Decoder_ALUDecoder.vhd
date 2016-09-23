@@ -39,21 +39,22 @@ architecture Behavioral of test_Decoder_ALUDecoder is
 
 component Decoder_ALUDecoder is
     Port ( Funct : in STD_LOGIC_VECTOR (4 downto 0);        -- from instruction memory
-           ALUOp : in STD_LOGIC;                            -- from Decoder_MainDecoder
+           ALUOp : in STD_LOGIC_VECTOR (1 downto 0);        -- from Decoder_MainDecoder
            ALUControl : out STD_LOGIC_VECTOR (1 downto 0);  -- to ALU
            FlagW : out STD_LOGIC_VECTOR (1 downto 0);       -- to CondLogic
            NoWrite : out STD_LOGIC );                       -- to CondLogic
 end component;
 
 signal Funct : STD_LOGIC_VECTOR (4 downto 0);        	-- from instruction memory
-signal ALUOp : STD_LOGIC;                            	-- from Decoder_MainDecoder
+signal ALUOp : STD_LOGIC_VECTOR (1 downto 0);           -- from Decoder_MainDecoder
 signal ALUControl : STD_LOGIC_VECTOR (1 downto 0);  	-- to ALU
 signal FlagW : STD_LOGIC_VECTOR (1 downto 0);       	-- to CondLogic
 signal NoWrite : STD_LOGIC;								-- to CondLogic
 
 -- for test bench only, flipped when scenario is tested to trigger assert statements
 signal NotDP_tested : STD_LOGIC := '0';	
-signal MEM_SUB_IMM_tested : STD_LOGIC := '0';		
+signal MEM_SUB_IMM_tested : STD_LOGIC := '0';
+signal MEM_ADD_IMM_tested : STD_LOGIC := '0';		
 signal ADD_tested : STD_LOGIC := '0';
 signal ADDS_tested : STD_LOGIC := '0';
 signal SUB_tested : STD_LOGIC := '0';  
@@ -71,37 +72,47 @@ begin
 	process 
     begin
 		
-        ALUOp <= '0'; Funct( 4 downto 1 ) <= "0100"; 			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1100";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0110";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0111";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1110";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1111";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+        ALUOp <= "00"; Funct( 4 downto 1 ) <= "0100"; 			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "1100";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "0101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "0110";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "0111";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "1101";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "1110";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
+		ALUOp <= "00"; Funct( 4 downto 1 ) <= "1111";			wait for 50ns; NotDP_tested <= not NotDP_tested;	-- Not DP
 		
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0000"; 			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1000";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0001";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0010";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "0011";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1001";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1010";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
-		ALUOp <= '0'; Funct( 4 downto 1 ) <= "1011";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0000"; 			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1000";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0001";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0010";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0011";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1001";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1010";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1011";			wait for 50ns; MEM_SUB_IMM_tested <= not MEM_SUB_IMM_tested;	-- LDR/STR with negative Imm
+		
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0100"; 			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1100";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0101";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0110";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "0111";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1101";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1110";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
+		ALUOp <= "10"; Funct( 4 downto 1 ) <= "1111";			wait for 50ns; MEM_ADD_IMM_tested <= not MEM_ADD_IMM_tested;	-- LDR/STR with positive Imm
 
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0100"; Funct(0) <= '0';	wait for 50ns; ADD_tested <= not ADD_tested;	-- ADD no flag
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0100"; Funct(0) <= '1';	wait for 50ns; ADDS_tested <= not ADDS_tested;	-- ADD no flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "0100"; Funct(0) <= '0';	wait for 50ns; ADD_tested <= not ADD_tested;	-- ADD no flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "0100"; Funct(0) <= '1';	wait for 50ns; ADDS_tested <= not ADDS_tested;	-- ADD no flag
 		
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0010"; Funct(0) <= '0';	wait for 50ns; SUB_tested <= not SUB_tested;	-- SUB no flag
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0010"; Funct(0) <= '1';	wait for 50ns; SUBS_tested <= not SUBS_tested;	-- SUB with flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "0010"; Funct(0) <= '0';	wait for 50ns; SUB_tested <= not SUB_tested;	-- SUB no flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "0010"; Funct(0) <= '1';	wait for 50ns; SUBS_tested <= not SUBS_tested;	-- SUB with flag
 		
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0000"; Funct(0) <= '0';	wait for 50ns; AND_tested <= not AND_tested;	-- AND no flag
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "0000"; Funct(0) <= '1';	wait for 50ns; ANDS_tested <= not ANDS_tested;	-- AND with flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "0000"; Funct(0) <= '0';	wait for 50ns; AND_tested <= not AND_tested;	-- AND no flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "0000"; Funct(0) <= '1';	wait for 50ns; ANDS_tested <= not ANDS_tested;	-- AND with flag
 		
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "1100"; Funct(0) <= '0';	wait for 50ns; ORR_tested <= not ORR_tested;	-- ORR no flag
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "1100"; Funct(0) <= '1';	wait for 50ns; ORRS_tested <= not ORRS_tested;	-- ORR with flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "1100"; Funct(0) <= '0';	wait for 50ns; ORR_tested <= not ORR_tested;	-- ORR no flag
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "1100"; Funct(0) <= '1';	wait for 50ns; ORRS_tested <= not ORRS_tested;	-- ORR with flag
 		
-		ALUOp <= '1'; Funct( 4 downto 1 ) <= "1010"; Funct(0) <= '1';	wait for 50ns; CMP_tested <= not CMP_tested;	-- CMP
+		ALUOp <= "01"; Funct( 4 downto 1 ) <= "1010"; Funct(0) <= '1';	wait for 50ns; CMP_tested <= not CMP_tested;	-- CMP
+		
 	
     end process;
 	
@@ -115,6 +126,12 @@ begin
 	begin 
 		assert ( ALUControl = "01" and FlagW = "00" and NoWrite = '0' ) 
 				 report "Not LDR/STR negative Imm" severity warning;
+	end process;
+	
+	process ( MEM_ADD_IMM_tested )
+	begin 
+		assert ( ALUControl = "00" and FlagW = "00" and NoWrite = '0' ) 
+				 report "Not LDR/STR positive Imm" severity warning;
 	end process;
 	
 	process ( ADD_tested )

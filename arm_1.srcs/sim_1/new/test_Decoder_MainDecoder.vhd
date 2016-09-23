@@ -48,7 +48,7 @@ component Decoder_MainDecoder is
            ALUSrc : out STD_LOGIC;                      -- to mux in ARM (input of ALU)
            ImmSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to Extend
            RegSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to mux in ARM (input of RegFile)
-           ALUOp : out STD_LOGIC);                      -- to Decoder_ALUDecoder
+           ALUOp : out STD_LOGIC_VECTOR (1 downto 0));  -- to Decoder_ALUDecoder
 end component;
 
 signal Op : STD_LOGIC_VECTOR (1 downto 0);      -- from instruction memory 
@@ -61,7 +61,7 @@ signal MemtoReg : STD_LOGIC;                    -- to mux in ARM (output of data
 signal ALUSrc : STD_LOGIC;                      -- to mux in ARM (input of ALU)
 signal ImmSrc : STD_LOGIC_VECTOR (1 downto 0);  -- to Extend
 signal RegSrc : STD_LOGIC_VECTOR (1 downto 0);  -- to mux in ARM (input of RegFile)
-signal ALUOp : STD_LOGIC;
+signal ALUOp : STD_LOGIC_VECTOR (1 downto 0);
 
 -- for test bench only, flipped when scenario is tested to trigger assert statements
 signal DPReg_tested : STD_LOGIC := '0';			
@@ -105,7 +105,7 @@ begin
 	process ( DPReg_tested )
 	begin 
 		assert ( Branch = '0' and MemtoReg = '0' and MemW = '0' and ALUSrc = '0' and 
-				 ImmSrc = "XX" and RegW = '1' and RegSrc = "00" and ALUOp = '1' ) 
+				 ImmSrc = "XX" and RegW = '1' and RegSrc = "00" and ALUOp = "01" ) 
 				 report "Not DP Reg" severity warning;
 	end process;
 	
@@ -113,7 +113,7 @@ begin
 	process ( DPImm_tested )
 	begin 
 		assert ( Branch = '0' and MemtoReg = '0' and MemW = '0' and ALUSrc = '1' and 
-				 ImmSrc = "00" and RegW = '1' and RegSrc = "X0" and ALUOp = '1' ) 
+				 ImmSrc = "00" and RegW = '1' and RegSrc = "X0" and ALUOp = "01" ) 
 				 report "Not DP Imm" severity warning;
 	end process;
 	
@@ -121,7 +121,7 @@ begin
 	process ( STR_tested )
 	begin 
 		assert ( Branch = '0' and MemtoReg = 'X' and MemW = '1' and ALUSrc = '1' and 
-				 ImmSrc = "01" and RegW = '0' and RegSrc = "10" and ALUOp = '0' ) 
+				 ImmSrc = "01" and RegW = '0' and RegSrc = "10" and ALUOp = "10" ) 
 				 report "Not STR" severity warning;
 	end process;
 	
@@ -129,7 +129,7 @@ begin
 	process ( LDR_tested )
 	begin 
 		assert ( Branch = '0' and MemtoReg = '1' and MemW = '0' and ALUSrc = '1' and 
-				 ImmSrc = "01" and RegW = '1' and RegSrc = "X0" and ALUOp = '0' ) 
+				 ImmSrc = "01" and RegW = '1' and RegSrc = "X0" and ALUOp = "10" ) 
 				 report "Not LDR" severity warning;
 	end process;
 	
@@ -137,7 +137,7 @@ begin
 	process ( B_tested )
 	begin 
 		assert ( Branch = '1' and MemtoReg = '0' and MemW = '0' and ALUSrc = '1' and 
-				 ImmSrc = "10" and RegW = '0' and RegSrc = "X1" and ALUOp = '0' ) 
+				 ImmSrc = "10" and RegW = '0' and RegSrc = "X1" and ALUOp = "00" ) 
 				 report "Not B" severity warning;
 	end process;
 

@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity Decoder_ALUDecoder is
     Port ( Funct : in STD_LOGIC_VECTOR (4 downto 0);        -- from instruction memory
-           ALUOp : in STD_LOGIC;                            -- from Decoder_MainDecoder
+           ALUOp : in STD_LOGIC_VECTOR (1 downto 0);        -- from Decoder_MainDecoder
            ALUControl : out STD_LOGIC_VECTOR (1 downto 0);  -- to ALU
            FlagW : out STD_LOGIC_VECTOR (1 downto 0);       -- to CondLogic
            NoWrite : out STD_LOGIC );                       -- to CondLogic
@@ -45,86 +45,70 @@ begin
 
 	-- Refer to Lecture 3 p43
 	
-	ALUControl		<=		"00" when 
-								( ALUOp = '0' and Funct(3) = '1' ) 		-- To accomodate LDR/STR with negative Imm offest
-								
+	ALUControl		<=		"00" when
+								-- non ALU op --
+								( ALUOp = "00" )
 								or 
-								--add--
-								(ALUOp = '1' and Funct( 4 downto 1 ) = "0100") else
-	
+								-- add --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "0100" )
+								or
+								-- STR/LDR with positive Imm offset --
+								( ALUOp = "10" and Funct(3) = '1' ) else
 							"01" when 
-							    --sub--
-								( ALUOp = '1' and Funct( 4 downto 1 ) = "0010" ) 
-								
+							    -- sub --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "0010" ) 
 								or
-								--cmp--
-								( ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' )	
-								
+								-- cmp --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' )	
 								or
-								
-								( ALUOp = '0' and Funct(3) = '0' )		-- For LDR/STR with negative Imm offest
-								
-								else
-							--and--
-							"10" when ALUOp = '1' and Funct( 4 downto 1 ) = "0000" else
-							--orr--
-							"11" when ALUOp = '1' and Funct( 4 downto 1 ) = "1100" else
-							
+								-- STR/LDR with negative Imm offset --
+								( ALUOp = "10" and Funct(3) = '0' ) else
+							"10" when 
+								-- and --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "0000" ) else
+							"11" when 
+								-- orr --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "1100" ) else
 							"XX";
 	
 	FlagW			<=		"00" when
-	
-								( ALUOp = '0' ) 
-								
+								-- non ALU op, STR/LDR --
+								( ALUOp = "00" or  ALUOp = "10" ) 
 								or
-								
-								( ALUOp = '1' and 
+								-- add, sub, and, orr with S = 0
+								( ALUOp = "01" and 
 								( Funct( 4 downto 1 ) = "0100" or
 								  Funct( 4 downto 1 ) = "0010" or
 								  Funct( 4 downto 1 ) = "0000" or
-								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '0')	
-								  
-								else
-								
+								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '0' ) else 
 							"11" when
-							
-								( ALUOp = '1' and 
+								-- add, sub with S = 1--
+								( ALUOp = "01" and 
 								( Funct( 4 downto 1 ) = "0100" or
-								  Funct( 4 downto 1 ) = "0010" ) and Funct(0) = '1' )
-								  
+								  Funct( 4 downto 1 ) = "0010" ) and Funct(0) = '1' )							  
 								or 
-								
-								( ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' ) 
-								
-								  
-								else
-							
+								-- cmp --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' ) else
 							"10" when
-							
-								( ALUOp = '1' and 
+								-- and, or with S = 1
+								( ALUOp = "01" and 
 								( Funct( 4 downto 1 ) = "0000" or
-								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '1' )
-								  
-								else
-								
+								  Funct( 4 downto 1 ) = "1100" ) and Funct(0) = '1' ) else
 							"XX";
 	
 	NoWrite			<= 		'0' when 
-	
-								( ALUOp = '0' ) 
-								
+								-- non ALU op, STR/LDR --
+								( ALUOp = "00" or ALUOp = "10") 
 								or
-								
-								( ALUOp = '1' and 
+								-- add, sub, and, orr--
+								( ALUOp = "01" and 
 								( Funct( 4 downto 1 ) = "0100" or
 								  Funct( 4 downto 1 ) = "0010" or
 								  Funct( 4 downto 1 ) = "0000" or
-								  Funct( 4 downto 1 ) = "1100" ))
-								  
-								else
-								
-							'1' when ALUOp = '1' and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' else
-							
+								  Funct( 4 downto 1 ) = "1100" )) else
+							'1' when 
+								-- cmp --
+								( ALUOp = "01" and Funct( 4 downto 1 ) = "1010" and Funct(0) = '1' ) else
 							'X';
 
 end Behavioral;

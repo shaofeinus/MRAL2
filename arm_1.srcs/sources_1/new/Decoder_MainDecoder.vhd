@@ -42,7 +42,7 @@ entity Decoder_MainDecoder is
            ALUSrc : out STD_LOGIC;                      -- to mux in ARM (input of ALU)
            ImmSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to Extend
            RegSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to mux in ARM (input of RegFile)
-           ALUOp : out STD_LOGIC);                      -- to Decoder_ALUDecoder
+           ALUOp : out STD_LOGIC_VECTOR (1 downto 0));  -- to Decoder_ALUDecoder
 end Decoder_MainDecoder;
 
 architecture Behavioral of Decoder_MainDecoder is
@@ -83,8 +83,9 @@ begin
 						"X1" when Op = "10" else
 						"XX";
 	
-	ALUOp		<=		'1' when Op = "00" else
-						'0' when Op = "01" or Op = "10" else
-						'X';
+	ALUOp		<=		"00" when Op = "10" else	-- B (although ALUOp = "00", ALU still does an add operation which is always expected by B instr)
+						"01" when Op = "00" else	-- ADD, SUB, AND, OR, CMP
+						"10" when Op = "01" else	-- LDR/STR (ALUOp = "10" tells the ALU decoder look at the U bit to decide whether to do add or sub operation)
+						"XX";
 
 end Behavioral;

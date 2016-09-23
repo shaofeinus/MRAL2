@@ -52,7 +52,7 @@ end Decoder;
 
 architecture Decoder_arch of Decoder is
 
-	signal ALUOp 			: std_logic;
+	signal ALUOp 			: std_logic_vector (1 downto 0);
 	signal Branch 			: std_logic;
 	signal RegWTemp         : std_logic;
 	
@@ -74,12 +74,12 @@ architecture Decoder_arch of Decoder is
                ALUSrc : out STD_LOGIC;                      -- to mux in ARM (input of ALU)
                ImmSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to Extend
                RegSrc : out STD_LOGIC_VECTOR (1 downto 0);  -- to mux in ARM (input of RegFile)
-               ALUOp : out STD_LOGIC);                      -- to Decoder_ALUDecoder
+               ALUOp : out STD_LOGIC_VECTOR (1 downto 0));  -- to Decoder_ALUDecoder
     end component;
     
     component Decoder_ALUDecoder is
         Port ( Funct : in STD_LOGIC_VECTOR (4 downto 0);        -- from instruction memory
-               ALUOp : in STD_LOGIC;                            -- from Decoder_MainDecoder
+               ALUOp : in STD_LOGIC_VECTOR (1 downto 0);        -- from Decoder_MainDecoder
                ALUControl : out STD_LOGIC_VECTOR (1 downto 0);  -- to ALU
                FlagW : out STD_LOGIC_VECTOR (1 downto 0);       -- to CondLogic
                NoWrite : out STD_LOGIC );
