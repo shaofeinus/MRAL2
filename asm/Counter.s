@@ -128,10 +128,10 @@ NEXT_INSTR
 ; All constants should be declared below.
 ZERO	
 		DCD 0x00000000		; Zero
-DELAY_CYCLES
-		DCD 0x007FFFFF		; 23 bits clock cycles of delay
 ;DELAY_CYCLES
-		;DCD 0x00000002		; 2 bits clock cycles of delay
+		;DCD 0x007FFFFF		; 23 bits clock cycles of delay
+DELAY_CYCLES
+		DCD 0x00000002		; 2 bits clock cycles of delay
 DIPS_DATA_MASK			
 		DCD 0x000000FF		; Take in only bits 7 downto 0 from DIPS switch
 COUNT_INTERVAL
