@@ -108,7 +108,19 @@ signal RESET_EXT	: std_logic; -- effective reset
 ----------------------------------------------------------------
 type MEM_128x32 is array (0 to 127) of std_logic_vector (31 downto 0); -- 128 words
 
--- DP Reg no shift
+------------------- START OF PROGRAM DATA ----------------------
+
+-- INSTRUCTIONS:
+-- There are 4 programs in this TOP.vhd, where only 1 program can run at a time. 
+-- To run a program, comment the Instruction and Data memory for the other programs and leave
+-- the Instruction and Data memory for the desired program uncommented.
+-- Each program is labelled by the comments above its instruction memory.
+
+
+------------------- START OF DP_reg_no_shift.s -----------------
+-- Instruction and Data memory for DP_reg_no_shift.s
+-- Refer to readme.txt for the instructions that are tested by this program
+-- Uncomment to run DP_reg_no_shift.s 
 ------------------------------------------------------------------
 ---- Instruction Memory
 ------------------------------------------------------------------
@@ -145,9 +157,9 @@ type MEM_128x32 is array (0 to 127) of std_logic_vector (31 downto 0); -- 128 wo
 --											x"EAFFFFE4", 
 --											others => x"00000000");
 
-----------------------------------------------------------------
--- Data (Constant) Memory
-----------------------------------------------------------------
+------------------------------------------------------------------
+---- Data (Constant) Memory
+------------------------------------------------------------------
 --constant DATA_CONST_MEM : MEM_128x32 := (	x"00000C00", 
 --											x"00000C04", 
 --											x"00000C0C", 
@@ -158,12 +170,15 @@ type MEM_128x32 is array (0 to 127) of std_logic_vector (31 downto 0); -- 128 wo
 --											x"00000004", 
 --											x"00000008", 
 --											others => x"00000000");
+------------------- END OF DP_reg_no_shift.s -----------------
 
-					
--- DP Reg with shift
-----------------------------------------------------------------
--- Instruction Memory
-----------------------------------------------------------------
+------------------- START OF DP_reg_shift.s ------------------
+-- Instruction and Data memory for DP_reg_shift.s
+-- Uncomment to run DP_reg_shift.s 	
+-- Refer to readme.txt for the instructions that are tested by this program			
+------------------------------------------------------------------
+---- Instruction Memory
+------------------------------------------------------------------
 --constant INSTR_MEM : MEM_128x32 := (		x"E59FC1FC", 
 --											x"E59FB1F4", 
 --											x"E59FA1FC", 
@@ -216,13 +231,15 @@ type MEM_128x32 is array (0 to 127) of std_logic_vector (31 downto 0); -- 128 wo
 --											x"00000004", 
 --											x"00000008", 
 --											others => x"00000000");
+------------------- END OF DP_reg_shift.s --------------------
 
-
-											
--- Memory					
-----------------------------------------------------------------
--- Instruction Memory
-----------------------------------------------------------------
+------------------- START OF Mem.s ---------------------------										
+-- Instruction and Data memory for Mem.s
+-- Uncomment to run Mem.s 	
+-- Refer to readme.txt for the instructions that are tested by this program				
+------------------------------------------------------------------
+---- Instruction Memory
+------------------------------------------------------------------
 --constant INSTR_MEM : MEM_128x32 := (		x"E59FC1FC", 
 --											x"E59FB1F4", 
 --											x"E59FA1FC", 
@@ -280,12 +297,19 @@ type MEM_128x32 is array (0 to 127) of std_logic_vector (31 downto 0); -- 128 wo
 --											x"00000004", 
 --											x"00000008", 
 --											others => x"00000000");
-											
-											
--- Counter may need to alter delay cycles, as the value is too high. If change, convert code and addon here
-------------------------------------------------------------------
----- Instruction Memory
-------------------------------------------------------------------
+------------------- END OF Mem.s ------------------------------	
+			
+------------------- START OF Counter.s ------------------------
+-- Instruction and Data memory for Counter.s 
+-- Uncomment to run Counter.s 	
+-- NOTE: There is a delay value associated with this program. 
+-- when in SIMULATION, use the value x"00000002"
+-- when in actual IMPLEMENTAION, use value x"007FFFFF"
+-- Refer to Data Memory section below to see exactly where the delay value is located
+-- Refer to readme.txt for the instructions that are tested by this program							
+----------------------------------------------------------------
+-- Instruction Memory
+----------------------------------------------------------------
 constant INSTR_MEM : MEM_128x32 := (		x"E59FC1FC", 
 											x"E59FB1F4", 
 											x"E59FA1FC", 
@@ -354,17 +378,17 @@ constant INSTR_MEM : MEM_128x32 := (		x"E59FC1FC",
 											others => x"00000000");
 
 
-------------------------------------------------------------------
----- Data (Constant) Memory
-------------------------------------------------------------------
+----------------------------------------------------------------
+-- Data (Constant) Memory
+----------------------------------------------------------------
 constant DATA_CONST_MEM : MEM_128x32 := (	x"00000C00", 
 											x"00000C04", 
 											x"00000C0C", 
 											x"00000C08", 
 											x"00000800", 
 											x"00000000",
-											x"00000002", 
---											x"007FFFFF", 
+--											x"00000002",   -- DELAY used for simulation. Uncomment for SIMULATION ONLY.
+											x"007FFFFF",   -- DELAY used For actual implementation of FPGA. Uncomment for IMPLEMENTATION ONLY.
 											x"000000FF", 
 											x"10000000", 
 											x"00000001", 
@@ -372,6 +396,9 @@ constant DATA_CONST_MEM : MEM_128x32 := (	x"00000C00",
 											x"00000004", 
 											x"00000008", 
 											others => x"00000000");
+------------------- END OF Counter.s --------------------------
+
+------------------- END OF PROGRAM DATA -----------------------
 																						
 ----------------------------------------------------------------
 -- Data (Variable) Memory

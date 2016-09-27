@@ -16,10 +16,10 @@ USE ieee.std_logic_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY test_top IS
-END test_top;
+ENTITY test_top_mem IS
+END test_top_mem;
  
-ARCHITECTURE behavior OF test_top IS 
+ARCHITECTURE behavior OF test_top_mem IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
@@ -78,8 +78,9 @@ BEGIN
 		wait for CLK_undiv_period/2;
    end process;
  
-
-   -- Stimulus process
+   -- Test bench for Mem.s
+   -- Remember to uncomment the Instruction and Data memory section 
+   -- for Mem.s in TOP.vhd before simulation
    stim_proc: process
    begin		
       -- hold reset state for 10 ns.

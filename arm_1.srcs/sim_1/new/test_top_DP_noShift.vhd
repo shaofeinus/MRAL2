@@ -16,10 +16,10 @@ USE ieee.std_logic_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY test_top IS
-END test_top;
+ENTITY test_top_DP_noshift IS
+END test_top_DP_noshift;
  
-ARCHITECTURE behavior OF test_top IS 
+ARCHITECTURE behavior OF test_top_DP_noshift IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
@@ -56,7 +56,6 @@ ARCHITECTURE behavior OF test_top IS
    signal LED_value : std_logic_vector(7 downto 0);
  
 BEGIN
- 
 	-- Instantiate the Unit Under Test (UUT)
    uut: TOP PORT MAP (
           DIP => DIP,
@@ -78,8 +77,9 @@ BEGIN
 		wait for CLK_undiv_period/2;
    end process;
  
-
-   -- Stimulus process
+   -- Test bench for DP_reg_no_shift.s
+   -- Remember to uncomment the Instruction and Data memory section 
+   -- for DP_reg_no_shift.s in TOP.vhd before simulation
    stim_proc: process
    begin		
       -- hold reset state for 10 ns.
@@ -87,15 +87,15 @@ BEGIN
 	  RESET <= '1';                                     --RESET is ACTIVE LOW
 	  
 	  -- Simulation for DP with no shift
-	  DIP <= x"0001"; PB <= "0001"; wait for 500ns;    -- ADD  
-	  DIP <= x"0011"; PB <= "0010"; wait for 500ns;    -- SUB
-	  DIP <= x"0000"; PB <= "0100"; wait for 500ns;    -- ORR
-	  DIP <= x"0000"; PB <= "1000"; wait for 500ns;    -- AND
+	  DIP <= x"0001"; PB <= "0001"; wait for 1us;    -- ADD  
+	  DIP <= x"0011"; PB <= "0010"; wait for 1us;    -- SUB
+	  DIP <= x"0000"; PB <= "0100"; wait for 1us;    -- ORR
+	  DIP <= x"0000"; PB <= "1000"; wait for 1us;    -- AND
 
-      DIP <= x"0011"; PB <= "0001"; wait for 500ns;    -- ADD
-      DIP <= x"0100"; PB <= "0010"; wait for 500ns;    -- SUB
-      DIP <= x"1111"; PB <= "0100"; wait for 500ns;    -- ORR
-      DIP <= x"8080"; PB <= "1000"; wait for 500ns;    -- AND
+      DIP <= x"0011"; PB <= "0001"; wait for 1us;    -- ADD
+      DIP <= x"0100"; PB <= "0010"; wait for 1us;    -- SUB
+      DIP <= x"1111"; PB <= "0100"; wait for 1us;    -- ORR
+      DIP <= x"8080"; PB <= "1000"; wait for 1us;    -- AND
 
 
 

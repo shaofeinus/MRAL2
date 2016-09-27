@@ -24,16 +24,16 @@
 		LDR  R7,  DIPS_ADDR_MASK
 		LDR  R6,  DIPS_DATA_MASK  
 		; R1 constains scratch work data
-		; R2 contains address for memory instructions
-		; R3 contains data to be stored or loaded for memory instructions
+		; R2 contains the memory address for memory instructions
+		; R3 contains data to be stored or loaded for memory instructions (Rd)
 		
 
 LOAD_INPUTS		
 		LDR  R1, [R12]				; Read input from DIPS
-		AND  R2, R1, R7				; Mask bits 31 downto 8, to extract base address for memory instructions
-		ADD  R2, R8					; Add reference address to base address, so that positve and negative offsets (of 4 words) to addresses is still be within the RAM range
-		AND  R3, R1, R6				; Mask bits 31 downto 16 and 7 downto 0, to extract data to be stored in memory
-		ADD  R3, R9, R3, LSR #8		; Shift data right by 8 bits so that it can be displayed on LED
+		AND  R2, R1, R7				; Mask bits 31:8 of DIPS, to extract base address for memory instructions
+		ADD  R2, R8					; Add reference address to base address, so that positve and negative offsets (of 128 bits) to (reference adrress + base address) is still be within the RAM range
+		AND  R3, R1, R6				; Mask bits 31:16 and 7:0 of DIPS,
+		ADD  R3, R9, R3, LSR #8		; and shift right by 8 bits, to extract data to be stored in memory
 		
 POLL_INSTR_TYPE
 		LDR	 R4, [R10]					; Read instr type from PBTN
@@ -52,22 +52,22 @@ POLL_INSTR_TYPE
 		B	 POLL_INSTR_TYPE			; Keep polling until a valid type is entered
 	
 LDR_N_OFFSET_OP	
-		LDR  R3, [R2, #-16]			; Load from base address - 4	
+		LDR  R3, [R2, #-16]			; Load from (reference address + base base address) - 4	
 		STR  R3, [R11]				; Display loaded data on LED
 		B LOAD_INPUTS
 		
 STR_P_OFFSET_OP	
-		STR  R3, [R2, #16]			; Store to base address + 4	
+		STR  R3, [R2, #16]			; Store to (reference address + base base address) + 4	
 		STR  R3, [R11]				; Display stored data on LED
 		B LOAD_INPUTS
 		
 STR_N_OFFSET_OP	
-		STR  R3, [R2, #-16]			; Store to base address - 4	
+		STR  R3, [R2, #-16]			; Store to (reference address + base base address) - 4	
 		STR  R3, [R11]				; Display stored data on LED
 		B LOAD_INPUTS
 
 LDR_P_OFFSET_OP	
-		LDR  R3, [R2, #16]			; Load from base address + 4	
+		LDR  R3, [R2, #16]			; Load from (reference address + base base address) + 4	
 		STR  R3, [R11]				; Display loaded data on LED
 		B LOAD_INPUTS
 
@@ -91,11 +91,11 @@ PBTN
 ZERO
 		DCD 0x00000000		; Zero
 REF_ADDR
-		DCD 0x00000880		; Reference address for memory instructions (0x880)
+		DCD 0x00000880		; Reference address for memory instructions (0x880). 
 DIPS_ADDR_MASK
-		DCD 0x000000FF		; Mask the DIPS input to allow only for bits 7 downto 0 inputs 	
+		DCD 0x000000FF		; Mask the DIPS input to allow only for bits 7:0 inputs 	
 DIPS_DATA_MASK
-		DCD 0x0000FF00		; Mask the DIPS input to allow only for bits 15 downto 8 inputs 
+		DCD 0x0000FF00		; Mask the DIPS input to allow only for bits 15:8 inputs 
 LDR_N_OFFSET_OPCODE
 		DCD 0x00000001		; User input to indicate LDR with negative offset instr ("0001") BTND
 STR_P_OFFSET_OPCODE 

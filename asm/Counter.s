@@ -19,14 +19,14 @@
 		LDR	 R12, DIPS  			; load address of DIP switches. DO NOT use pseudo-instructions
 		LDR  R11, LEDS  			; load address of LEDs
 		LDR  R10, PBTN  			; load address of PBTN
-		LDR  R9,  NEXT_INSTR		; load address of UART
-		LDR  R8,  DIPS_DATA_MASK	; load reference address
+		LDR  R9,  NEXT_INSTR		; load address to store next instruction address before branch
+		LDR  R8,  DIPS_DATA_MASK	; load bit mask for inputs
 		LDR  R7,  DELAY_CYCLES		; load delay cycles
 		LDR  R6,  ZERO				; load zero
-		LDR  R3,  COUNT_INTERVAL	; load count interval
+		LDR  R3,  COUNT_INTERVAL	; load count actual interval
 		; R1 contains 8 bits data to be displayed on LED
 		; R2 contains actual data that is being operated on for unsigned count up and and signed count up/down
-		; R2 is left shift of R1 by 24 bits, so that effects of the carry bit on the flags can be observed  
+		; R2 is LSL of R1 by 24 bits, so that effects of the carry/overflow bit on the flags can be observed  
 		
 POLL_INSTR_TYPE
 		STR	 R6, [R11]					; Clear LED
@@ -47,11 +47,10 @@ POLL_INSTR_TYPE
 
 COUNTD_OP
 		LDR  R1,  [R12]				; Load from DIPS
-		AND  R1,  R8				; Take in only bits 7 downto 0
+		AND  R1,  R8				; Take in only bits 7:0
 COUNTD_LOOP
 		STR  R1,  [R11]				; Display loaded data on LED
 		STR  R15, [R9]				; Store next instruction address after DELAY
-		; ADD  R9,  R15, #0			; Store next instruction address after DELAY
 		B DELAY			
 		SUBS R1,  #16				; Count down
 		BPL COUNTD_LOOP				; Continue counting if count is positive (N not set)
@@ -59,12 +58,11 @@ COUNTD_LOOP
 		
 COUNTU_SIGNED_OP
 		LDR  R1,  [R12]				; Load from DIPS
-		AND  R1,  R8				; Take in only bits 7 downto 0
-		ADD  R2,  R6, R1, LSL #24	; Alight bits 7 downto 0 with bits 31 downto 16, to show the effects of overflow
+		AND  R1,  R8				; Take in only bits 7:0
+		ADD  R2,  R6, R1, LSL #24	; Alight bits 7:0 with bits 31:16, to show the effects of overflow
 COUNTU_SIGNED_LOOP
 		STR  R1,  [R11]				; Display loaded data on LED
 		STR  R15, [R9]				; Store next instruction address after DELAY
-		; ADD  R9,  R15, #0			; Store next instruction address after DELAY
 		B DELAY			
 		ADD  R1,  #16				; Count up counter that is not left shifted, for display purpose only
 		ADDS R2,  R3				; Count up counter that is left shifted, this is the real counting where flags are updated
@@ -73,12 +71,11 @@ COUNTU_SIGNED_LOOP
 		
 COUNTD_SIGNED_OP		
 		LDR  R1,  [R12]				; Load from DIPS
-		AND  R1,  R8				; Take in only bits 7 downto 0
-		ADD  R2,  R6, R1, LSL #24	; Alight bits 7 downto 0 with bits 31 downto 16, to show the effects of overflow
+		AND  R1,  R8				; Take in only bits 7:0
+		ADD  R2,  R6, R1, LSL #24	; Alight bits 7:0 with bits 31:16, to show the effects of overflow
 COUNTD_SIGNED_LOOP
 		STR  R1,  [R11]				; Display loaded data on LED
 		STR  R15, [R9]				; Store next instruction address (PC + 8) after DELAY_CYCLES
-		; ADD  R9,  R15, #0			; Store next instruction address after DELAY
 		B DELAY		
 		SUB  R1,  #16				; Count down counter that is not left shifted, for display purpose only
 		SUBS R2,  R3				; Count down counter that is left shifted, this is the real counting where flags are updated
@@ -87,12 +84,11 @@ COUNTD_SIGNED_LOOP
 
 COUNTU_OP
 		LDR  R1,  [R12]				; Load from DIPS
-		AND  R1,  R8				; Take in only bits 7 downto 0
-		ADD  R2,  R6, R1, LSL #24	; Alight bits 7 downto 0 with bits 31 downto 16, to show the effects of carry
+		AND  R1,  R8				; Take in only bits 7:0
+		ADD  R2,  R6, R1, LSL #24	; Alight bits 7:0 with bits 31:16, to show the effects of carry
 COUNTU_LOOP
 		STR  R1,  [R11]				; Display loaded data on LED
 		STR  R15, [R9]				; Store next instruction address after DELAY
-		; ADD  R9,  R15, #0			; Store next instruction address after DELAY
 		B DELAY		
 		ADD  R1,  #16				; Count up counter that is not left shifted, for display purpose only	
 		ADDS R2,  R3 				; Count up counter that is left shifted, this is the real counting where flags are updated
@@ -103,8 +99,7 @@ DELAY
 		SUBS R7, #1					; Decrement counter
 		LDREQ  R7,  DELAY_CYCLES	; Reset delay counter if count is 0
 		LDREQ  R15, [R9] 			; Load next instruction to PC if count is 0, the next instruction is at the (PC before branch + 8)
-		; ADDEQ  R15, R9, #0		; Load next instruction to PC if count is 0
-		BNE DELAY					; Countinue counting if count is not 0
+		BNE DELAY					; Continue counting if count is not 0
 	
 		
 ; ------- <\code memory (ROM mapped to Instruction Memory) ends>
@@ -123,7 +118,7 @@ UART
 PBTN
 		DCD 0x00000C08		; Address of Push buttons
 NEXT_INSTR
-		DCD	0x00000800		; Address of to store next instruction addr
+		DCD	0x00000800		; Address to store next instruction address before branch
 
 ; All constants should be declared below.
 ZERO	
@@ -133,9 +128,9 @@ ZERO
 DELAY_CYCLES
 		DCD 0x00000002		; 2 bits clock cycles of delay
 DIPS_DATA_MASK			
-		DCD 0x000000FF		; Take in only bits 7 downto 0 from DIPS switch
+		DCD 0x000000FF		; Take in only bits 7:0 from DIPS switch
 COUNT_INTERVAL
-		DCD 0x10000000		; Count interval when bits 31 downto 16 of counter is treated as bits 7 downto 0
+		DCD 0x10000000		; Count interval (of 16) when bits 31:16 of counter is treated as bits 7:0
 COUNTD_OPCODE
 		DCD 0x00000001		; User input to indicate unsigned count down ("0001") BTND
 COUNTU_SIGNED_OPCODE 

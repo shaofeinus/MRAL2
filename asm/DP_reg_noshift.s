@@ -48,17 +48,17 @@ ADD_OP
 		B LOAD_OPERAND2
 		
 SUB_OP	
-		SUB  R1, R3, R2		; SUB to base number, result in R1
+		SUB  R1, R3, R2		; SUB from base number, result in R1
 		STR  R1, [R11]		; Display result on LED
 		B LOAD_OPERAND2
 		
 ORR_OP	
-		ORR  R1, R3, R2		; ORR to base number, result in R1
+		ORR  R1, R3, R2		; ORR with base number, result in R1
 		STR  R1, [R11]		; Display result on LED
 		B LOAD_OPERAND2
 		
 AND_OP	
-		AND  R1, R3, R2		; AND to base number, result in R1
+		AND  R1, R3, R2		; AND with base number, result in R1
 		STR  R1, [R11]		; Display result on LED
 		B LOAD_OPERAND2
 

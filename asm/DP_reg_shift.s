@@ -20,11 +20,11 @@
 		LDR  R11, LEDS  		; load address of LEDs
 		LDR  R10, PBTN  		; load address of PBTN
 		LDR  R3,  BASE			; load base number for DP instructions
-		; R2 contains operand2 of arithmetic operations
+		; R2 contains Src2 of arithmetic operations
 		; R1 contains scratch work data
 
 LOAD_OPERAND2		
-		LDR  R2, [R12]		; Read operand 2 from DIPS
+		LDR  R2, [R12]		; Read Src2 from DIPS
 		
 POLL_INSTR_TYPE
 		LDR	 R4, [R10]		; Read instr type from PBTN
@@ -43,40 +43,39 @@ POLL_INSTR_TYPE
 		B	 POLL_INSTR_TYPE; Keep polling until a valid type is entered
 	
 LSL_OP	
-		ADD  R1, R3, R2, LSL #1	
+		ADD  R1, R3, R2, LSL #1		; Do LSL of 1 bit
 		STR  R1, [R11]				; Display result on LED
 		B LOAD_OPERAND2
 		
 ; -- In this LSR demo, 
-; -- input on DIPS corresponds to bits 31 downto 16 of actual data being processed, while
-; -- output on LED corresponds to bits 31 downto 24 of actual data being processed
-; -- so as to demonstrate  that LSR redsults in left-most bits being 0 after shift
+; -- input on DIPS corresponds to bits 31:16 of actual data being processed, while
+; -- output on LED corresponds to bits 31:24 of actual data being processed
+; -- so as to demonstrate that LSR redsults in left-most bits being 0 after shift
 LSR_OP	
-		ADD  R1, R3, R2, LSL #16	; Align bit 15 downto 0 of Src2 (DIPS) to bit 31 downto 16
-		ADD  R1, R3, R1, LSR #1		; Do the actual LSR with the aligned Src2
-		ADD	 R1, R3, R1, LSR #24	; Align bit 31 downto 24 of result to bit 7 downto 0 to be displayed on LED
+		ADD  R1, R3, R2, LSL #16	; Align bit 15:0 of Src2 (DIPS) to bit 31:16
+		ADD  R1, R3, R1, LSR #1		; Do the actual LSR of 1 bit with the aligned Src2
+		ADD	 R1, R3, R1, LSR #24	; Align bit 31:24 of result to bit 7:0 to be displayed on LED
 		STR  R1, [R11]				; Display result on LED
 		B LOAD_OPERAND2
 		
 ; -- In this ASR demo, 
-; -- input on DIPS corresponds to bits 31 downto 16 of actual data being processed, while
-; -- output on LED corresponds to bits 31 downto 24 of actual data being processed
-; -- so as to demonstrate the ability of ASR to preserve the left-most bit
+; -- input on DIPS corresponds to bits 31:16 of actual data being processed, while
+; -- output on LED corresponds to bits 31:24 of actual data being processed
+; -- so as to demonstrate the ability of ASR to preserve the MSB before the shift
 ASR_OP	
-		ADD  R1, R3, R2, LSL #16	; Align bit 15 downto 0 of Src2 (DIPS) to bit 31 downto 16
-		ADD  R1, R3, R1, ASR #2		; Do the actual ASR with the aligned Src2
-		ADD	 R1, R3, R1, LSR #24	; Align bit 31 downto 24 of result to bit 7 downto 0 to be displayed on LED
+		ADD  R1, R3, R2, LSL #16	; Align bit 15:0 of Src2 (DIPS) to bit 31:16
+		ADD  R1, R3, R1, ASR #2		; Do the actual ASR of 2 bits with the aligned Src2
+		ADD	 R1, R3, R1, LSR #24	; Align bit 31:24 of result to bit 7:0 to be displayed on LED
 		STR  R1, [R11]				; Display result on LED
 		B LOAD_OPERAND2
 
 ; -- In this ROR demo, 
-; -- input on DIPS corresponds to bits 15 downto 0 of actual data being processed, while
-; -- output on LED corresponds to bits 31 downto 24 of actual data being processed,
+; -- input on DIPS corresponds to bits 15:0 of actual data being processed, while
+; -- output on LED corresponds to bits 31:24 of actual data being processed,
 ; -- so as to demonstrate the ability of ROR to rotate the right-most bits to the left-most bits
-; -- ROR is done is 8 bits so that the effect of ROR can be properly observed for inputs (DIPS) of up to 8 bits	
 ROR_OP	
-		ADD  R1, R3, R2, ROR #4	
-		ADD  R1, R3, R1, LSR #24	; Align bit 31 downto 24 of result to bit 7 downto 0 to be displayed on LED
+		ADD  R1, R3, R2, ROR #4		; Do ROR of 4 bits
+		ADD  R1, R3, R1, LSR #24	; Align bit 31:24 of result to bit 7:0 to be displayed on LED
 		STR  R1, [R11]				; Display result on LED
 		B LOAD_OPERAND2
 

@@ -16,10 +16,10 @@ USE ieee.std_logic_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY test_top IS
-END test_top;
+ENTITY test_top_DP_shift IS
+END test_top_DP_shift;
  
-ARCHITECTURE behavior OF test_top IS 
+ARCHITECTURE behavior OF test_top_DP_shift IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
@@ -78,8 +78,9 @@ BEGIN
 		wait for CLK_undiv_period/2;
    end process;
  
-
-   -- Stimulus process
+   -- Test bench for DP_reg_shift.s
+   -- Remember to uncomment the Instruction and Data memory section 
+   -- for DP_reg_shift.s in TOP.vhd before simulation
    stim_proc: process
    begin		
       -- hold reset state for 10 ns.
@@ -87,15 +88,15 @@ BEGIN
 	  RESET <= '1';                                     --RESET is ACTIVE LOW
 	  
 	  -- Simulation for DP with shift
-	  DIP <= x"8000"; PB <= "0001"; wait for 500ns;    -- ASR
-	  DIP <= x"F000"; PB <= "0010"; wait for 500ns;    -- LSR
-	  DIP <= x"0001"; PB <= "0100"; wait for 500ns;    -- LSL
-	  DIP <= x"0F0F"; PB <= "1000"; wait for 500ns;    -- ROR
+	  DIP <= x"8000"; PB <= "0001"; wait for 1us;    -- ASR
+	  DIP <= x"F000"; PB <= "0010"; wait for 1us;    -- LSR
+	  DIP <= x"0001"; PB <= "0100"; wait for 1us;    -- LSL
+	  DIP <= x"0F0F"; PB <= "1000"; wait for 1us;    -- ROR
 	  
-	  DIP <= x"0800"; PB <= "0001"; wait for 500ns;    -- ASR
-      DIP <= x"0110"; PB <= "0010"; wait for 500ns;    -- LSR
-      DIP <= x"0010"; PB <= "0100"; wait for 500ns;    -- LSL
-      DIP <= x"0210"; PB <= "1000"; wait for 500ns;    -- ROR
+	  DIP <= x"0800"; PB <= "0001"; wait for 1us;    -- ASR
+      DIP <= x"0110"; PB <= "0010"; wait for 1us;    -- LSR
+      DIP <= x"0010"; PB <= "0100"; wait for 1us;    -- LSL
+      DIP <= x"0210"; PB <= "1000"; wait for 1us;    -- ROR
 
       
    end process;
