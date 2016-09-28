@@ -98,7 +98,15 @@ BEGIN
       PB <= "0000"; wait for 5us;
       DIP <= x"0001"; PB <= "0100"; wait for 10us;         -- signed count down, stop counting down when 0x81 is reached 
       PB <= "0000"; wait for 5us;
-   
+      
+      DIP <= x"0021"; PB <= "1000"; wait for 10us;         -- unsigned count up, stop counting down when 0xF1 is reached 
+      PB <= "0000"; wait for 5us;
+      DIP <= x"00A1"; PB <= "0001"; wait for 10us;         -- unsigned count down, stop counting down when 0x01 is reached 
+      PB <= "0000"; wait for 5us;
+      DIP <= x"0051"; PB <= "0010"; wait for 10us;         -- signed count up, stop counting up when 0x71 is reached
+      PB <= "0000"; wait for 5us;
+      DIP <= x"0011"; PB <= "0100"; wait for 10us;         -- signed count down, stop counting down when 0x81 is reached 
+      PB <= "0000"; wait for 5us;   
    end process;
    
    -- Dispaly PC value as a signal

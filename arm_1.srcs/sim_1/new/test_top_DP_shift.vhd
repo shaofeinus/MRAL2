@@ -88,15 +88,22 @@ BEGIN
 	  RESET <= '1';                                     --RESET is ACTIVE LOW
 	  
 	  -- Simulation for DP with shift
-	  DIP <= x"8000"; PB <= "0001"; wait for 1us;    -- ASR
-	  DIP <= x"F000"; PB <= "0010"; wait for 1us;    -- LSR
-	  DIP <= x"0001"; PB <= "0100"; wait for 1us;    -- LSL
-	  DIP <= x"0F0F"; PB <= "1000"; wait for 1us;    -- ROR
+	  DIP <= x"8000"; PB <= "0001"; wait for 1us;    -- ASR    (Constant Base 0x00 + 0xE0(after shifting
+	                                                 --         to the right by 2 bits of 1) = 0xE0)
+	  DIP <= x"F000"; PB <= "0010"; wait for 1us;    -- LSR    (Constant Base 0x00 + 0x78(after shifting 
+	                                                 --         to the right by 1bit) = 0x78)
+	  DIP <= x"0001"; PB <= "0100"; wait for 1us;    -- LSL    (Constant Base 0x00 + 0x02(after shifting 
+                                                     --         to the left by 1bit) = 0x02)
+	  DIP <= x"0F0F"; PB <= "1000"; wait for 1us;    -- ROR    (Constant Base 0x00 + 0x0F(Rotational shift 
+	                                                 --         by 4 bits = 0xF0)
 	  
-	  DIP <= x"0800"; PB <= "0001"; wait for 1us;    -- ASR
-      DIP <= x"0110"; PB <= "0010"; wait for 1us;    -- LSR
-      DIP <= x"0010"; PB <= "0100"; wait for 1us;    -- LSL
-      DIP <= x"0210"; PB <= "1000"; wait for 1us;    -- ROR
+	  DIP <= x"0800"; PB <= "0001"; wait for 1us;    -- ASR    (Constant Base 0x00 + 0x20(after shifting
+                                                     --         to the right by 2 bits of 1) = 0xE0)
+      DIP <= x"0110"; PB <= "0010"; wait for 1us;    -- LSR    (Constant Base 0x00 + 0x00(after shifting
+                                                     --         to the right by 1bit = 0x20)
+      DIP <= x"0010"; PB <= "0100"; wait for 1us;    -- LSL    (Constant Base 0x00 + 0x20(after shifting
+                                                     --         to the left by 1bit = 0x00)
+      DIP <= x"0210"; PB <= "1000"; wait for 1us;    -- ROR    (Constant Base 0x00 + 0x01 = 0x20)
 
       
    end process;

@@ -87,15 +87,16 @@ BEGIN
 	  RESET <= '1';                                     --RESET is ACTIVE LOW
 	  
 	  -- Simulation for DP with no shift
-	  DIP <= x"0001"; PB <= "0001"; wait for 1us;    -- ADD  
-	  DIP <= x"0011"; PB <= "0010"; wait for 1us;    -- SUB
-	  DIP <= x"0000"; PB <= "0100"; wait for 1us;    -- ORR
-	  DIP <= x"0000"; PB <= "1000"; wait for 1us;    -- AND
+	  DIP <= x"0001"; PB <= "0001"; wait for 1us;    -- ADD    (Constant Base 0x88 + 0x01 = 0x89)  
+	  DIP <= x"0011"; PB <= "0010"; wait for 1us;    -- SUB    (Constant Base 0x88 - 0x01 = 0x77)
+	  DIP <= x"0000"; PB <= "0100"; wait for 1us;    -- ORR    (Constant Base 0x88 | 0x00 = 0x88)
+	  DIP <= x"0000"; PB <= "1000"; wait for 1us;    -- AND    (Constant Base 0x88 & 0x00 = 0x00)
 
-      DIP <= x"0011"; PB <= "0001"; wait for 1us;    -- ADD
-      DIP <= x"0100"; PB <= "0010"; wait for 1us;    -- SUB
-      DIP <= x"1111"; PB <= "0100"; wait for 1us;    -- ORR
-      DIP <= x"8080"; PB <= "1000"; wait for 1us;    -- AND
+      DIP <= x"0011"; PB <= "0001"; wait for 1us;    -- ADD    (Constant Base 0x88 + 0x11 = 0x99)
+      DIP <= x"0100"; PB <= "0010"; wait for 1us;    -- SUB    (Constant Base 0x88 - 0x01(only the show first 8 bits
+                                                     --          = 0x88)
+      DIP <= x"1111"; PB <= "0100"; wait for 1us;    -- ORR    (Constant Base 0x88 | 0x11 = 0x99)
+      DIP <= x"8080"; PB <= "1000"; wait for 1us;    -- AND    (Constant Base 0x88 & 0x80 = 0x80)
 
 
 

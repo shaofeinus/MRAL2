@@ -96,6 +96,15 @@ BEGIN
                                                        -- @ (Ref addr: 0x880 + Base addr: 0x20 - Offset: 16 = 0x890)
       DIP <= x"0060"; PB <= "1000"; wait for 1us;    -- LDR (positive offset) 
                                                        -- @ (Ref addr: 0x880 + Base addr: 0x60 + Offset: 16 = 0x8F0)
+                                                       
+      DIP <= x"4040"; PB <= "0010"; wait for 1us;    -- STR (positive offset) 0x40 
+                                                     -- @ (Ref addr: 0x880 + Base addr: 0x40 + Offset: 16 = 0x8D0)
+      DIP <= x"2224"; PB <= "0100"; wait for 1us;    -- STR (negative offset) 0x22
+                                                     -- @ (Ref addr: 0x880 + Base addr: 0x24 - Offset: 16 = 0x894)
+      DIP <= x"0060"; PB <= "0001"; wait for 1us;    -- LDR (negative offset) 
+                                                     -- @ (Ref addr: 0x880 + Base addr: 0x60 - Offset: 16 = 0x8D0)
+      DIP <= x"0004"; PB <= "1000"; wait for 1us;    -- LDR (positive offset) 
+                                                     -- @ (Ref addr: 0x880 + Base addr: 0x04 + Offset: 16 = 0x894)                                                 
 
       
    end process;
